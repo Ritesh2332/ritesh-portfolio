@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vCard - Personal Portfolio</title>
+
+  <!--
+    - favicon
+  -->
+  <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon">
+
+  <!--
+    - custom css link
+  -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+
+  <!--
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<section id="home" class="home-section">
+  <div class="home-container">
+
+    <body>
+
+      <!--
+    - #MAIN
+  -->
+
+      <main>
+
+        <!--
+      - #SIDEBAR
+    -->
+
+        <aside class="sidebar" data-sidebar>
+
+          <div class="sidebar-info">
+
+            <figure class="avatar-box">
+              <img src="./assets/images/pic.png" alt="Ritesh Kumar Paswan" width="80">
+            </figure>
+
+            <div class="info-content">
+              <h1 class="name" title="Ritesh Kumar Paswan">Ritesh Kumar Paswan</h1>
+
+              <p class="title">Aspiring Data Scientist | Data Analyst</p>
+            </div>
+
+            <button class="info_more-btn" data-sidebar-btn>
+              <span>Show Contacts</span>
+
+              <ion-icon name="chevron-down"></ion-icon>
+            </button>
+
+          </div>
+
+          <div class="sidebar-info_more">
+
+            <div class="separator"></div>
+
+            <ul class="contacts-list">
+
+              <li class="contact-item">
+
+                <div class="icon-box">
+                  <ion-icon name="mail-outline"></ion-icon>
+                </div>
+
+                <div class="contact-info">
+                  <p class="contact-title">Email</p>
+
+                  <a href="mailto:riteshkumarpaswan538@gmail.com"
+                    class="contact-link">riteshkumarpaswan538@gmail.com</a>
+                </div>
+
+              </li>
+
+              <li class="contact-item">
+
+                <div class="icon-box">
+                  <ion-icon name="phone-portrait-outline"></ion-icon>
+                </div>
+
+                <div class="contact-info">
+                  <p class="contact-title">Phone</p>
+
+                  <a href="tel:+919555512801" class="contact-link">+91 9555512801</a>
+                </div>
+
+              </li>
+
+              <li class="contact-item">
+
+                <div class="icon-box">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                </div>
+
+                <div class="contact-info">
+                  <p class="contact-title">Birthday</p>
+
+                  <time datetime="2003-12-23">Dec 23, 2003</time>
+                </div>
+
+              </li>
+
+              <li class="contact-item">
+
+                <div class="icon-box">
+                  <ion-icon name="location-outline"></ion-icon>
+                </div>
+
+                <div class="contact-info">
+                  <p class="contact-title">Location</p>
+
+                  <address>Punjab, India</address>
+                </div>
+
+              </li>
+
+            </ul>
+
+            <div class="separator"></div>
+
+            <ul class="social-list">
+
+              <!-- <li class="social-item">
+            <a href="https://leetcode.com/u/ritesh_1223/" class="social-link">
+              <ion-icon name="logo-leetcode"></ion-icon>
+            </a>
+          </li> -->
+              <li class="social-item">
+                <a href="https://leetcode.com/u/ritesh_1223/" class="social-link" target="_blank">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png" alt="LeetCode"
+                    class="leetcode-icon">
+                </a>
+              </li>
+
+              <li class="social-item">
+                <a href="https://www.linkedin.com/in/ritesh232" class="social-link">
+                  <ion-icon name="logo-linkedin"></ion-icon>
+                </a>
+              </li>
+
+              <li class="social-item">
+                <a href="https://github.com/Ritesh2332" class="social-link">
+                  <ion-icon name="logo-github"></ion-icon>
+                </a>
+              </li>
+
+            </ul>
+
+          </div>
+
+        </aside>
+
+
+
+
+
+        <!--
+      - #main-content
+    -->
+
+        <div class="main-content">
+
+          <!--
+        - #NAVBAR
+      -->
+
+          <nav class="navbar">
+
+            <ul class="navbar-list">
+
+              <li class="navbar-item">
+                <button class="navbar-link  active" data-nav-link>About</button>
+              </li>
+
+              <li class="navbar-item">
+                <button class="navbar-link" data-nav-link>Resume</button>
+              </li>
+
+              <li class="navbar-item">
+                <button class="navbar-link" data-nav-link>Projects</button>
+              </li>
+
+              <li class="navbar-item">
+                <button class="navbar-link" data-nav-link>Certificates</button>
+              </li>
+
+              <li class="navbar-item">
+                <button class="navbar-link" data-nav-link>Contact</button>
+              </li>
+
+            </ul>
+
+          </nav>
+
+
+
+
+
+          <!--
+        - #ABOUT
+      -->
+
+          <article class="about  active" data-page="about">
+
+            <header>
+              <h2 class="h2 article-title">About me</h2>
+            </header>
+
+            <section class="about-text">
+              <p>
+                I am a Computer Science student specializing in Data Science and Analytics, with hands on experience in
+                Python, SQL, and Power BI. I focus on solving real world problems using data driven approaches.
+              </p>
+
+              <p>
+                I have worked on large scale datasets and built machine learning models and dashboards that uncover
+                actionable insights. Currently seeking internship opportunities in Data Science / Data Analytics roles.
+              </p>
+            </section>
+
+
+            <!--
+          - service
+        -->
+
+            <section class="service">
+
+              <h3 class="h3 service-title">What i'm doing</h3>
+
+              <ul class="service-list">
+
+                <li class="service-item">
+
+                  <div class="service-icon-box">
+                    <img src="./assets/images/icon-design.svg" alt="design icon" width="40">
+                  </div>
+
+                  <div class="service-content-box">
+                    <h4 class="h4 service-item-title">Data Science</h4>
+
+                    <p class="service-item-text">
+                      Extracting insights from data using Python, SQL, and visualization tools.
+                    </p>
+                  </div>
+
+                </li>
+
+                <li class="service-item">
+
+                  <div class="service-icon-box">
+                    <img src="./assets/images/icon-dev.svg" alt="Web development icon" width="40">
+                  </div>
+
+                  <div class="service-content-box">
+                    <h4 class="h4 service-item-title">Machine Learning</h4>
+
+                    <p class="service-item-text">
+                      Building predictive models using Scikit-Learn and TensorFlow.
+                    </p>
+                  </div>
+
+                </li>
+
+                <li class="service-item">
+
+                  <div class="service-icon-box">
+                    <img src="./assets/images/icon-app.svg" alt="mobile app icon" width="40">
+                  </div>
+
+                  <div class="service-content-box">
+                    <h4 class="h4 service-item-title">Dashboard Development</h4>
+
+                    <p class="service-item-text">
+                      Creating interactive dashboards using Power BI for business insights.
+                    </p>
+                  </div>
+
+                </li>
+
+                <li class="service-item">
+
+                  <div class="service-icon-box">
+                    <img src="./assets/images/icon-photo.svg" alt="camera icon" width="40">
+                  </div>
+
+                  <div class="service-content-box">
+                    <h4 class="h4 service-item-title">Data Visualization</h4>
+
+                    <p class="service-item-text">
+                      Visualizing complex datasets using Matplotlib and Seaborn.
+                    </p>
+                  </div>
+
+                </li>
+
+              </ul>
+
+            </section>
+          </article>
+
+          <!--
+        - #RESUME
+      -->
+
+          <article class="resume" data-page="resume">
+
+            <header>
+              <h2 class="h2 article-title">Resume</h2>
+            </header>
+
+            <section class="resume-actions">
+
+              <figure class="resume-preview">
+                <img src="./assets/images/cv.jpg" alt="Resume preview" loading="lazy">
+              </figure>
+
+              <div class="resume-btns">
+                <a class="resume-btn" href="./assets/images/ritesh__cv.pdf" download>Download Resume</a>
+              </div>
+
+            </section>
+
+            <section class="skill">
+
+              <h3 class="h3 skills-title">My skills</h3>
+
+              <ul class="skills-list content-card">
+
+                <li class="skills-item">
+
+                  <div class="title-wrapper">
+                    <h5 class="h5">Python & Data Analysis</h5>
+                    <data value="Intermedia ">Advanced (2+ projects, 1 Training)</data>
+                  </div>
+
+                  <div class="skill-progress-bg">
+                    <div class="skill-progress-fill" style="width: 80%;"></div>
+                  </div>
+
+                </li>
+
+                <li class="skills-item">
+
+                  <div class="title-wrapper">
+                    <h5 class="h5">Machine Learning</h5>
+                    <data value="Intermediate">Intermediate (Iris, Clustering project)</data>
+                  </div>
+
+                  <div class="skill-progress-bg">
+                    <div class="skill-progress-fill" style="width: 70%;"></div>
+                  </div>
+
+                </li>
+
+                <li class="skills-item">
+
+                  <div class="title-wrapper">
+                    <h5 class="h5">Database</h5>
+                    <data value="Intermediate">Intermediate (SQL + Hadoop)</data>
+                  </div>
+
+                  <div class="skill-progress-bg">
+                    <div class="skill-progress-fill" style="width: 85%;"></div>
+                  </div>
+
+                </li>
+
+                <li class="skills-item">
+
+                  <div class="title-wrapper">
+                    <h5 class="h5">Power BI & Visualization</h5>
+                    <data value="Intermediate" style="text-align: right;">Intermediate (HR Dashboard, EDA Projects)</data>
+                  </div>
+
+                  <div class="skill-progress-bg">
+                    <div class="skill-progress-fill" style="width: 80%;"></div>
+                  </div>
+
+                </li>
+
+              </ul>
+
+              <div class="skills-tags">
+
+                <span><img src="https://cdn.simpleicons.org/python/ffd700" width="14" height="14" alt="Python" />
+                  Python</span>
+                <span><img src="https://cdn.simpleicons.org/mysql/ffd700" width="14" height="14" alt="SQL" /> SQL</span>
+                <span><img src="https://cdn.simpleicons.org/pandas/ffd700" width="14" height="14" alt="Pandas" />
+                  Pandas</span>
+                <span><img src="https://cdn.simpleicons.org/numpy/ffd700" width="14" height="14" alt="NumPy" />
+                  NumPy</span>
+                <span><img src="https://cdn.simpleicons.org/scikitlearn/ffd700" width="14" height="14"
+                    alt="Scikit-Learn" />
+                  Scikit-Learn</span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="12" width="7" height="12" rx="1.5" fill="#ffd700" fill-opacity="0.6" />
+                    <rect x="9" y="6" width="7" height="18" rx="1.5" fill="#ffd700" fill-opacity="0.85" />
+                    <rect x="16" y="0" width="7" height="24" rx="1.5" fill="#ffd700" />
+                  </svg> Power BI</span>
+                <span><ion-icon name="bar-chart-outline" style="font-size: 14px;"></ion-icon> Matplotlib</span>
+                <span><ion-icon name="stats-chart-outline" style="font-size: 14px;"></ion-icon> Seaborn</span>
+                <span><img src="https://cdn.simpleicons.org/git/ffd700" width="14" height="14" alt="Git" /> Git</span>
+                <span><img src="https://cdn.simpleicons.org/apachehadoop/ffd700" width="14" height="14" alt="Hadoop" />
+                  Hadoop</span>
+
+              </div>
+
+            </section>
+
+          </article>
+
+
+
+
+
+          <!--
+        - #PORTFOLIO
+      -->
+
+          <article class="portfolio" data-page="portfolio">
+
+            <header>
+              <h2 class="h2 article-title">Projects</h2>
+            </header>
+
+            <section class="projects">
+
+              <ul class="filter-list">
+
+                <li class="filter-item">
+                  <button class="active" data-filter-btn>All</button>
+                </li>
+
+                <li class="filter-item">
+                  <button data-filter-btn>Data Analytics</button>
+                </li>
+
+                <li class="filter-item">
+                  <button data-filter-btn>Machine Learning</button>
+                </li>
+
+                <li class="filter-item">
+                  <button data-filter-btn data-filter-value="ai">AI/Chatbots</button>
+                </li>
+
+              </ul>
+
+              <div class="filter-select-box">
+
+                <button class="filter-select" data-select>
+
+                  <div class="select-value" data-select-value>Select category</div>
+
+                  <div class="select-icon">
+                    <ion-icon name="chevron-down"></ion-icon>
+                  </div>
+
+                </button>
+
+                <ul class="select-list">
+
+                  <li class="select-item">
+                    <button data-select-item>All</button>
+                  </li>
+
+                  <li class="select-item">
+                    <button data-select-item>Data Analytics</button>
+                  </li>
+
+                  <li class="select-item">
+                    <button data-select-item>Applications</button>
+                  </li>
+
+                  <li class="select-item">
+                    <button data-select-item>Web development</button>
+                  </li>
+
+                  <li class="select-item">
+                    <button data-select-item data-filter-value="ai">AI/Chatbots</button>
+                  </li>
+                </ul>
+
+              </div>
+
+              <ul class="project-list">
+
+                <li class="project-item  active" data-filter-item data-category="data analytics">
+                  <a href="#" class="project-link">
+
+                    <figure class="project-img">
+                      <div class="project-item-icon-box">
+                        <ion-icon name="eye-outline"></ion-icon>
+                      </div>
+
+                      <img src="./assets/images/Project_1.png" alt="Prison Analytics Dashboard" loading="lazy">
+                    </figure>
+
+                    <div class="project-content">
+
+                      <h3 class="project-title">Prison Analytics Dashboard</h3>
+
+                      <p class="project-category">Data Analytics | Power BI</p>
+
+                      <p class="project-description">
+                        Designed and developed an interactive Power BI dashboard to analyze prison data, including inmate population trends, rehabilitation progress, and resource utilization. Implemented dynamic visualizations and KPIs to help identify patterns, improve decision-making, and optimize administrative efficiency.
+                      </p>
+
+                      <p class="project-tech">Tech Stack: Power BI, Excel, Data Cleaning, DAX</p>
+
+                    </div>
+
+                  </a>
+                </li>
+
+                <li class="project-item  active" data-filter-item data-category="data analytics">
+                  <a href="https://github.com/Ritesh2332/HR-Analytics-Employee-Performance" target="_blank" class="project-link">
+
+                    <figure class="project-img">
+                      <div class="project-item-icon-box">
+                        <ion-icon name="eye-outline"></ion-icon>
+                      </div>
+
+                      <img src="./assets/images/Project_2.png" alt="HR Analytics Employee Performance" loading="lazy">
+                    </figure>
+
+                    <div class="project-content">
+
+                      <h3 class="project-title">HR Analytics Employee Performance</h3>
+
+                      <p class="project-category">Data Analytics</p>
+
+                      <p class="project-description">
+                        Built an HR analytics dashboard to evaluate employee performance, track key metrics like productivity, attendance, and departmental efficiency. Applied data analysis techniques to identify high-performing segments and areas needing improvement, enabling data-driven HR decisions.
+                      </p>
+
+                      <p class="project-tech">Tech Stack: Python, Pandas, Matplotlib / Seaborn, Power BI</p>
+
+                    </div>
+
+                  </a>
+                </li>
+
+                <li class="project-item  active" data-filter-item data-category="machine learning">
+                  <div class="project-link">
+
+                    <a class="project-thumb-link" href="https://github.com/Ritesh2332/Iris-Flower-Classification" target="_blank" rel="noopener noreferrer">
+                      <figure class="project-img">
+                        <div class="project-item-icon-box">
+                          <ion-icon name="eye-outline"></ion-icon>
+                        </div>
+
+                        <img src="./assets/images/Project_3.png" alt="Iris Flower Classification" loading="lazy">
+                      </figure>
+                    </a>
+
+                    <div class="project-content">
+
+                      <div class="project-title-row">
+                        <h3 class="project-title">Iris Flower Classification</h3>
+                        <a class="project-live" href="https://iris-predictor-1.streamlit.app/" target="_blank" rel="noopener noreferrer">Live</a>
+                      </div>
+
+                      <p class="project-category">Machine Learning</p>
+
+                      <p class="project-description">
+                        Developed a machine learning model that predicts iris flower species using sepal and petal measurements. Trained and evaluated multiple classification algorithms to achieve high accuracy, and deployed the model with a user-friendly web interface for real-time predictions.
+                      </p>
+
+                      <p class="project-tech">Tech Stack: Python, Scikit-learn, Streamlit, HTML/CSS</p>
+
+                    </div>
+
+                  </div>
+                </li>
+
+                <li class="project-item  active" data-filter-item data-category="machine learning">
+                  <div class="project-link">
+
+                    <a class="project-thumb-link" href="https://newspipe.streamlit.app/" target="_blank" rel="noopener noreferrer">
+                      <figure class="project-img">
+                        <div class="project-item-icon-box">
+                          <ion-icon name="eye-outline"></ion-icon>
+                        </div>
+
+                        <img src="./assets/images/Proj_5.png" alt="AI News Sentiment Analyzer" loading="lazy">
+                      </figure>
+                    </a>
+
+                    <div class="project-content">
+
+                      <div class="project-title-row">
+                        <h3 class="project-title">AI News Sentiment Analyzer</h3>
+                        <a class="project-live" href="https://newspipe.streamlit.app/" target="_blank" rel="noopener noreferrer">Live</a>
+                      </div>
+
+                      <p class="project-category">Machine Learning</p>
+
+                      <p class="project-description">
+                        An end-to-end machine learning-based web application that analyzes real-time news sentiment using NLP techniques. The app fetches live news via RSS feeds and web scraping, classifies sentiment (positive, neutral, negative), and presents insights through an interactive Streamlit dashboard.
+                      </p>
+
+                      <p class="project-tech">Tech Stack: Python, NLP, Streamlit, RSS, Web Scraping</p>
+
+                    </div>
+
+                  </div>
+                </li>
+
+                <li class="project-item  active" data-filter-item data-category="ai">
+                  <div class="project-link">
+
+                    <a class="project-thumb-link" href="https://github.com/Ritesh2332/Mortgage_Calculator_ChatBot" target="_blank" rel="noopener noreferrer">
+                      <figure class="project-img">
+                        <div class="project-item-icon-box">
+                          <ion-icon name="eye-outline"></ion-icon>
+                        </div>
+
+                        <img src="./assets/images/chatbot1.png" alt="Mortgage Calculator ChatBot" loading="lazy">
+                      </figure>
+                    </a>
+
+                    <div class="project-content">
+
+                      <div class="project-title-row">
+                        <h3 class="project-title">Mortgage Calculator ChatBot</h3>
+                        <a class="project-live" href="https://mortgagecalculatorchatbot-ritesh2332.streamlit.app/" target="_blank" rel="noopener noreferrer">Live</a>
+                      </div>
+
+                      <p class="project-category">AI/Chatbots</p>
+
+                      <p class="project-description">
+                        AI-powered mortgage calculator web app built with Streamlit that computes monthly payments and delivers personalized financial advice using Gemini AI. Features a clean UI, secure API handling, and real-time user interaction.
+                      </p>
+
+                    </div>
+
+                  </div>
+                </li>
+
+              </ul>
+
+            </section>
+
+          </article>
+
+          <!--
+        - #CERTIFICATES
+      -->
+
+          <article class="certificates" data-page="certificates">
+
+            <header>
+              <h2 class="h2 article-title">Certificates</h2>
+            </header>
+
+            <section class="certificates-section">
+
+              <ul class="cert-tabs" data-cert-tabs>
+                <li class="cert-tab-item">
+                  <button class="cert-tab-btn active" type="button" data-cert-tab="certificates">Certificates</button>
+                </li>
+
+                <li class="cert-tab-item">
+                  <button class="cert-tab-btn" type="button" data-cert-tab="training">Training</button>
+                </li>
+
+                <li class="cert-tab-item">
+                  <button class="cert-tab-btn" type="button" data-cert-tab="achievements">Achievements</button>
+                </li>
+              </ul>
+
+              <div class="cert-panels">
+
+                <div class="cert-panel" data-cert-panel="training">
+
+                  <ul class="certificates-list">
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/certificates/Training0.png" alt="Data Science Training Certificate" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="school-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">From Data to Insights: A Hands-On Approach to Data Science</h3>
+                          <p class="certificate-issuer">Lovely Professional University (Centre for Professional Enhancement) &bull; 2025</p>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/certificates/Training2.png" alt="Deloitte Data Analytics Job Simulation" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="school-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">Deloitte - Data Analytics Job Simulation</h3>
+                          <p class="certificate-issuer">Forage &bull; 2025</p>
+                        </div>
+                      </div>
+                    </li>
+
+                  </ul>
+
+                </div>
+
+                <div class="cert-panel" data-cert-panel="achievements">
+
+                  <ul class="certificates-list">
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/certificates/Training1.png" alt="Certificate of Merit (LexiQuiz)" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="trophy-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">LexiQuiz - Certificate of Merit</h3>
+                          <p class="certificate-issuer">Lovely Professional University (Centre for Professional Enhancement) &bull; 2024</p>
+                        </div>
+                      </div>
+                    </li>
+
+                  </ul>
+
+                </div>
+
+                <div class="cert-panel active" data-cert-panel="certificates">
+
+                  <ul class="certificates-list">
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/DS.png" alt="Oracle Cloud Infrastructure – Data Science Professional" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="ribbon-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">Oracle Cloud Infrastructure – Data Science Professional</h3>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/AI.png" alt="Oracle Cloud Infrastructure – AI Associate" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="ribbon-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">Oracle Cloud Infrastructure – AI Associate</h3>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/Cert0.png" alt="IBM Data Science 101" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="ribbon-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">Data Science 101</h3>
+                          <p class="certificate-issuer">IBM SkillsBuild &bull; 2025</p>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/Cert1.png" alt="Deloitte Data Analytics Job Simulation" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="ribbon-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">Deloitte - Data Analytics Job Simulation</h3>
+                          <p class="certificate-issuer">Forage &bull; 2025</p>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li class="certificate-item">
+                      <div class="certificate-card">
+                        <figure class="certificate-img-box">
+                          <img src="./assets/images/Cert2.png" alt="Data Structures and Algorithm - Certificate of Completion" loading="lazy">
+                          <div class="certificate-overlay">
+                            <ion-icon name="ribbon-outline"></ion-icon>
+                          </div>
+                        </figure>
+                        <div class="certificate-info">
+                          <h3 class="certificate-title">Data Structures and Algorithm</h3>
+                          <p class="certificate-issuer">Lovely Professional University &bull; 2024</p>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- Add more certificates below by copying the <li> block above -->
+
+                  </ul>
+
+                </div>
+
+              </div>
+
+            </section>
+
+          </article>
+
+          <!--
+        - #CONTACT
+      -->
+
+          <article class="contact" data-page="contact">
+
+            <header>
+              <h2 class="h2 article-title">Contact</h2>
+            </header>
+
+            <div class="contact-layout">
+
+              <section class="mapbox" data-mapbox>
+                <figure>
+                  <iframe
+                    src="https://www.google.com/maps?q=Phagwara%2C%20Punjab%2C%20India&output=embed"
+                    width="400" height="300" loading="lazy"></iframe>
+                </figure>
+              </section>
+
+              <section class="contact-form">
+
+                <h3 class="h3 form-title">Contact Form</h3>
+
+                <form action="https://formspree.io/f/xjgapgll" method="POST" class="form" data-form>
+
+                  <div class="input-wrapper">
+                    <input type="text" name="fullname" class="form-input" placeholder="Full name" required
+                      data-form-input>
+
+                    <input type="email" name="email" class="form-input" placeholder="Email address" required
+                      data-form-input>
+                  </div>
+
+                  <textarea name="message" class="form-input" placeholder="Your Message" required
+                    data-form-input></textarea>
+
+                  <button class="form-btn" type="submit" disabled data-form-btn>
+                    <ion-icon name="paper-plane"></ion-icon>
+                    <span>Send Message</span>
+                  </button>
+
+                  <p class="form-status" data-form-status aria-live="polite"></p>
+
+                </form>
+
+              </section>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </main>
+
+      <div class="cert-lightbox" data-cert-lightbox>
+        <div class="cert-lightbox__overlay" data-cert-lightbox-close></div>
+
+        <div class="cert-lightbox__content" role="dialog" aria-modal="true" aria-label="Certificate preview">
+          <button class="cert-lightbox__close" type="button" aria-label="Close" data-cert-lightbox-close>
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+
+          <img class="cert-lightbox__img" data-cert-lightbox-img alt="" src="">
+        </div>
+      </div>
+
+      <!--
+    - custom js link
+  -->
+      <script src="./assets/js/script.js"></script>
+
+      <!--
+    - ionicon link
+  -->
+      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    </body>
+
+</html>
