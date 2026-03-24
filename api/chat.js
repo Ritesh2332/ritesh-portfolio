@@ -1,4 +1,29 @@
-export default async function handler(req, res) {
+async function readJsonBody(req) {
+  if (req?.body && typeof req.body === "object") return req.body;
+
+  return await new Promise((resolve) => {
+    let data = "";
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+    req.on("end", () => {
+      try {
+        resolve(data ? JSON.parse(data) : {});
+      } catch {
+        resolve({});
+      }
+    });
+    req.on("error", () => resolve({}));
+  });
+}
+
+module.exports = async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    res.statusCode = 204;
+    res.end();
+    return;
+  }
+
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
     return;
@@ -11,7 +36,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body || {};
+    const body = await readJsonBody(req);
+    const { message } = body || {};
     const userMessage = typeof message === "string" ? message.trim() : "";
 
     if (!userMessage) {
@@ -59,6 +85,7 @@ export default async function handler(req, res) {
 
     if (!r.ok) {
       const txt = await r.text();
+      console.error("Gemini request failed", txt);
       res.status(500).json({ error: "Gemini request failed", details: txt });
       return;
     }
@@ -70,6 +97,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ reply: text || "Sorry, I couldn't generate a response." });
   } catch (e) {
+    console.error("/api/chat error", e);
     res.status(500).json({ error: "Server error" });
   }
-}
+};
