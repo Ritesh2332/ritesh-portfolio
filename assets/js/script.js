@@ -87,18 +87,18 @@ function addMessage(text, sender) {
 }
 
 async function fetchBotReply(message) {
-  const r = await fetch("/api/chat", {
+  const res = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
   });
 
-  if (!r.ok) {
-    const txt = await r.text();
+  if (!res.ok) {
+    const txt = await res.text();
     throw new Error(txt || "Request failed");
   }
 
-  const data = await r.json();
+  const data = await res.json();
   return data?.reply || "Sorry, I couldn't generate a response.";
 }
 
@@ -116,15 +116,25 @@ function quickAsk(type) {
     chat.scrollTop = chat.scrollHeight;
   }
 
-  fetchBotReply(prompt)
-    .then((reply) => {
+  (async () => {
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: prompt }),
+      });
+
+      const data = await res.json();
+      const reply = data?.reply || "Sorry, I couldn't generate a response.";
       if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
       addMessage(reply, "bot");
-    })
-    .catch(() => {
+    } catch {
       if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
       addMessage("Sorry, the chatbot is unavailable right now. Please try again in a moment.", "bot");
-    });
+    }
+  })();
 }
 
 window.quickAsk = quickAsk;
@@ -132,7 +142,7 @@ window.quickAsk = quickAsk;
 addMessage("Hi! Ask me anything about my portfolio, projects, skills, or availability.", "bot");
 
 if (chatbotForm && chatbotInput) {
-  chatbotForm.addEventListener("submit", (e) => {
+  chatbotForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const input = chatbotInput.value.trim();
     if (!input) return;
@@ -148,15 +158,23 @@ if (chatbotForm && chatbotInput) {
       chat.scrollTop = chat.scrollHeight;
     }
 
-    fetchBotReply(input)
-      .then((reply) => {
-        if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
-        addMessage(reply, "bot");
-      })
-      .catch(() => {
-        if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
-        addMessage("Sorry, the chatbot is unavailable right now. Please try again in a moment.", "bot");
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: input }),
       });
+
+      const data = await res.json();
+      const reply = data?.reply || "Sorry, I couldn't generate a response.";
+      if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+      addMessage(reply, "bot");
+    } catch {
+      if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+      addMessage("Sorry, the chatbot is unavailable right now. Please try again in a moment.", "bot");
+    }
   });
 }
 
