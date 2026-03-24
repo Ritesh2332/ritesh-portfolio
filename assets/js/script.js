@@ -18,6 +18,148 @@ navigationLinks.forEach((link, index) => {
   });
 });
 
+const chatbotForm = document.querySelector("[data-chatbot-form]");
+const chatbotInput = document.querySelector("[data-chatbot-input]");
+
+const quickPrompts = {
+  projects: "Show my projects",
+  skills: "What tech / skills do I use?",
+  availability: "Am I available for internships?",
+  contact: "How can I contact you? Always include LinkedIn and GitHub as clickable links.",
+};
+
+function linkifyText(text) {
+  const escapeHtml = (s) =>
+    s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+  const escaped = escapeHtml(text || "");
+
+  const withLinks = escaped
+    .replace(/(https?:\/\/[^\s]+)/g, (m) => `<a href="${m}" target="_blank" rel="noopener noreferrer">${m}</a>`)
+    .replace(/\b(linkedin\.com\/[\w\-./?=&%]+)\b/g, (m) => {
+      const href = `https://${m}`;
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer">${m}</a>`;
+    })
+    .replace(/\b(github\.com\/[\w\-./?=&%]+)\b/g, (m) => {
+      const href = `https://${m}`;
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer">${m}</a>`;
+    })
+    .replace(/\b([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})\b/gi, (m) => {
+      return `<a href="mailto:${m}">${m}</a>`;
+    });
+
+  return withLinks.replace(/\n/g, "<br>");
+}
+
+function typeEffect(text, element, speed = 20) {
+  let i = 0;
+  element.textContent = "";
+  function typing() {
+    if (i < text.length) {
+      element.textContent += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    } else {
+      element.innerHTML = linkifyText(element.textContent);
+    }
+  }
+  typing();
+}
+
+function addMessage(text, sender) {
+  const chat = document.querySelector(".chat-box");
+  if (!chat) return;
+
+  const msg = document.createElement("div");
+  msg.className = sender === "user" ? "user-msg" : "bot-msg";
+  chat.appendChild(msg);
+
+  if (sender === "bot") {
+    typeEffect(text, msg);
+  } else {
+    msg.innerText = text;
+  }
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function fetchBotReply(message) {
+  const r = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
+
+  if (!r.ok) {
+    const txt = await r.text();
+    throw new Error(txt || "Request failed");
+  }
+
+  const data = await r.json();
+  return data?.reply || "Sorry, I couldn't generate a response.";
+}
+
+function quickAsk(type) {
+  const prompt = quickPrompts[type] || type;
+  if (!prompt) return;
+
+  addMessage(prompt, "user");
+  const placeholder = document.createElement("div");
+  placeholder.className = "bot-msg";
+  placeholder.textContent = "Typing...";
+  const chat = document.querySelector(".chat-box");
+  if (chat) {
+    chat.appendChild(placeholder);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  fetchBotReply(prompt)
+    .then((reply) => {
+      if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+      addMessage(reply, "bot");
+    })
+    .catch(() => {
+      if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+      addMessage("Sorry, the chatbot is unavailable right now. Please try again in a moment.", "bot");
+    });
+}
+
+window.quickAsk = quickAsk;
+
+addMessage("Hi! Ask me anything about my portfolio, projects, skills, or availability.", "bot");
+
+if (chatbotForm && chatbotInput) {
+  chatbotForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = chatbotInput.value.trim();
+    if (!input) return;
+    addMessage(input, "user");
+    chatbotInput.value = "";
+
+    const placeholder = document.createElement("div");
+    placeholder.className = "bot-msg";
+    placeholder.textContent = "Typing...";
+    const chat = document.querySelector(".chat-box");
+    if (chat) {
+      chat.appendChild(placeholder);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    fetchBotReply(input)
+      .then((reply) => {
+        if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+        addMessage(reply, "bot");
+      })
+      .catch(() => {
+        if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+        addMessage("Sorry, the chatbot is unavailable right now. Please try again in a moment.", "bot");
+      });
+  });
+}
+
 // contact form variables
 const form = document.querySelector("[data-form]");
 const formInputs = document.querySelectorAll("[data-form-input]");
