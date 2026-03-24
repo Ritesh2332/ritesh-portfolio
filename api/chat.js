@@ -61,7 +61,7 @@ module.exports = async function handler(req, res) {
       "Certificates include: Oracle Cloud Infrastructure Data Science Professional, Oracle Cloud Infrastructure AI Associate, Deloitte Data Analytics Job Simulation, Data Science 101 (IBM SkillsBuild), DSA certificate\n";
 
     const url =
-      "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" +
+      "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" +
       encodeURIComponent(apiKey);
 
     const payload = {
