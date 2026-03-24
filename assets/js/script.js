@@ -22,10 +22,36 @@ const chatbotForm = document.querySelector("[data-chatbot-form]");
 const chatbotInput = document.querySelector("[data-chatbot-input]");
 
 const quickPrompts = {
-  projects: "Show my projects",
-  skills: "What tech / skills do I use?",
-  availability: "Am I available for internships?",
-  contact: "How can I contact you? Always include LinkedIn and GitHub as clickable links.",
+  // Core Info
+  intro: "Give me a quick introduction about yourself",
+  skills: "What are your key technical skills?",
+  techStack: "What technologies and tools do you use?",
+
+  // Projects (HIGH VALUE 🔥)
+  projects: "Show your top projects with brief explanations",
+  bestProject: "Which is your best project and why?",
+  projectDetails: "Explain one of your projects in detail with impact and tech used",
+
+  // Experience & Goals
+  experience: "What practical experience do you have?",
+  learning: "How do you approach learning new technologies?",
+  goals: "What are your short-term and long-term career goals?",
+
+  // Problem Solving & Thinking
+  problemSolving: "How do you approach solving a new problem?",
+  strengths: "What are your key strengths as a developer?",
+
+  // Specializations
+  dataScience: "What is your experience in Data Science and Machine Learning?",
+  nlp: "Have you worked on NLP or real-time data projects?",
+  dashboard: "Tell me about your Power BI dashboard project",
+
+  // Availability & Hiring
+  availability: "Are you available for internships or opportunities?",
+  hire: "Why should someone hire you?",
+
+  // Contact
+  contact: "How can I contact you? Include LinkedIn and GitHub links",
 };
 
 function linkifyText(text) {
@@ -35,10 +61,20 @@ function linkifyText(text) {
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
 
-  const escaped = escapeHtml(text || "");
+  let escaped = escapeHtml((text || "").replace(/\r\n/g, "\n"));
+
+  escaped = escaped.replace(/^\s*[\*\-]\s+/gm, "• ");
+
+  escaped = escaped.replace(/\*\*([^*]+?)\*\*/g, "<strong>$1</strong>");
+
+  escaped = escaped.replace(/\[([^\]]+?)\]\((https?:\/\/[^\s)]+)\)/g, (m, label, url) => {
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  });
 
   const withLinks = escaped
-    .replace(/(https?:\/\/[^\s]+)/g, (m) => `<a href="${m}" target="_blank" rel="noopener noreferrer">${m}</a>`)
+    .replace(/(?<!href=\")\b(https?:\/\/[^\s<]+)\b/g, (m) => {
+      return `<a href="${m}" target="_blank" rel="noopener noreferrer">${m}</a>`;
+    })
     .replace(/\b(linkedin\.com\/[\w\-./?=&%]+)\b/g, (m) => {
       const href = `https://${m}`;
       return `<a href="${href}" target="_blank" rel="noopener noreferrer">${m}</a>`;
