@@ -1241,6 +1241,11 @@ main {
   flex-wrap: wrap;
 }
 
+.quick-actions .quick-actions-clear {
+  margin-left: auto;
+  order: 999;
+}
+
 .quick-actions button {
   background: transparent;
   border: 1px solid #facc15;

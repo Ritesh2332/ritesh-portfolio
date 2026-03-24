@@ -55,13 +55,31 @@ const quickPrompts = {
 };
 
 function linkifyText(text) {
+  const sanitizeBotText = (raw) => {
+    let s = String(raw || "");
+
+    // If the model ever returns HTML anchors/fragments, strip them and keep only readable text.
+    // Full anchors -> keep inner text
+    s = s.replace(/<a\b[^>]*>(.*?)<\/a>/gi, "$1");
+    // Any remaining opening/closing tags
+    s = s.replace(/<\/?a\b[^>]*>/gi, "");
+    // Common leaked attribute fragments
+    s = s.replace(/\s*target\s*=\s*"_blank"/gi, "");
+    s = s.replace(/\s*rel\s*=\s*"[^"]*"/gi, "");
+    s = s.replace(/\s*href\s*=\s*"/gi, "");
+    s = s.replace(/\s*>\s*/g, " ");
+    s = s.replace(/&quot;/gi, '"');
+
+    return s;
+  };
+
   const escapeHtml = (s) =>
     s
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
 
-  let escaped = escapeHtml((text || "").replace(/\r\n/g, "\n"));
+  let escaped = escapeHtml(sanitizeBotText(text).replace(/\r\n/g, "\n"));
 
   escaped = escaped.replace(/^\s*[\*\-]\s+/gm, "• ");
 
@@ -174,6 +192,15 @@ function quickAsk(type) {
 }
 
 window.quickAsk = quickAsk;
+
+function clearChat() {
+  const chat = document.querySelector(".chat-box");
+  if (!chat) return;
+  chat.innerHTML = "";
+  addMessage("Hi! Ask me anything about my portfolio, projects, skills, or availability.", "bot");
+}
+
+window.clearChat = clearChat;
 
 addMessage("Hi! Ask me anything about my portfolio, projects, skills, or availability.", "bot");
 
