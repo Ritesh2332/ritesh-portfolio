@@ -88,6 +88,51 @@
 
 }
 
+html[data-theme="light"] {
+  --smoky-black: hsl(0, 0%, 98%);
+  --eerie-black-1: hsl(0, 0%, 100%);
+  --eerie-black-2: hsl(0, 0%, 100%);
+  --onyx: hsl(0, 0%, 96%);
+  --jet: hsl(0, 0%, 86%);
+  --light-gray: hsl(0, 0%, 18%);
+  --light-gray-70: hsla(0, 0%, 18%, 0.7);
+  --white-1: hsl(0, 0%, 8%);
+  --white-2: hsl(0, 0%, 10%);
+
+  --bg-gradient-onyx: linear-gradient(to bottom right,
+      hsl(0, 0%, 98%) 3%,
+      hsl(0, 0%, 92%) 97%);
+  --bg-gradient-jet: linear-gradient(to bottom right,
+      hsla(0, 0%, 90%, 0.65) 0%,
+      hsla(0, 0%, 100%, 0) 100%), hsl(0, 0%, 98%);
+}
+
+html[data-theme="light"] .navbar {
+  background: hsla(0, 0%, 100%, 0.82);
+}
+
+html[data-theme="light"] .bot-msg {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+html[data-theme="light"] .leetcode-icon {
+  filter: invert(0);
+}
+
+html[data-theme="light"] .social-item .social-link {
+  color: hsl(0, 0%, 25%);
+}
+
+html[data-theme="light"] .social-item .social-link:hover {
+  color: hsl(0, 0%, 10%);
+}
+
+html[data-theme="light"] .icon-box,
+html[data-theme="light"] .contact-hook-btn {
+  color: hsl(0, 0%, 15%);
+}
+
 
 
 
@@ -521,12 +566,51 @@ main {
   z-index: 5;
 }
 
+.theme-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--orange-yellow-crayola);
+  background: var(--border-gradient-onyx);
+  box-shadow: var(--shadow-2);
+  transition: var(--transition-1);
+}
+
+.theme-toggle::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: var(--bg-gradient-jet);
+  z-index: -1;
+}
+
+.theme-toggle ion-icon {
+  font-size: 16px;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus {
+  background: var(--bg-gradient-yellow-1);
+}
+
+.theme-toggle:hover::before,
+.theme-toggle:focus::before {
+  background: var(--bg-gradient-yellow-2);
+}
+
 .navbar-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 46px 0 10px;
 }
 
 .navbar-link {

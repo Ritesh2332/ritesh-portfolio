@@ -2,6 +2,30 @@
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
+// theme toggle
+const themeToggleBtn = document.querySelector("[data-theme-toggle]");
+
+function applyTheme(theme) {
+  const t = theme === "light" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", t);
+
+  const icon = themeToggleBtn?.querySelector("ion-icon");
+  if (icon) icon.setAttribute("name", t === "light" ? "sunny-outline" : "moon-outline");
+}
+
+if (themeToggleBtn) {
+  const storedTheme = localStorage.getItem("theme");
+  const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+  applyTheme(storedTheme || (prefersLight ? "light" : "dark"));
+
+  themeToggleBtn.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme") || "dark";
+    const next = current === "light" ? "dark" : "light";
+    localStorage.setItem("theme", next);
+    applyTheme(next);
+  });
+}
+
 // add event to all nav link
 navigationLinks.forEach((link, index) => {
   link.addEventListener("click", () => {
