@@ -217,6 +217,77 @@ function quickAsk(type) {
 
 window.quickAsk = quickAsk;
 
+const moveAskmeBotToButton = (btn) => {
+  const card = btn?.closest(".chatbot-card");
+  if (!card) return;
+
+  const bot = card.querySelector(".askme-bot");
+  if (!bot) return;
+
+  const prefersReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const cardRect = card.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+  const botRect = bot.getBoundingClientRect();
+
+  const botW = botRect.width || 86;
+  const botH = botRect.height || 86;
+
+  // Target: centered on button, sitting slightly above it.
+  let targetX = btnRect.left - cardRect.left + btnRect.width / 2 - botW / 2;
+  const gapAboveButton = 18;
+  let targetY = btnRect.top - cardRect.top - botH - gapAboveButton;
+
+  // Keep within card bounds.
+  const pad = 6;
+  targetX = Math.max(pad, Math.min(targetX, cardRect.width - botW - pad));
+  // Allow the bot to sit slightly above the card (negative Y) so it doesn't cover the button.
+  const minY = -Math.round(botH * 0.55);
+  targetY = Math.max(minY, Math.min(targetY, cardRect.height - botH - pad));
+
+  const currentX = parseFloat(bot.dataset.x || 14);
+  const currentY = parseFloat(bot.dataset.y || 14);
+
+  bot.dataset.x = String(targetX);
+  bot.dataset.y = String(targetY);
+
+  if (prefersReduce) {
+    bot.style.setProperty("--bot-x", `${targetX}px`);
+    bot.style.setProperty("--bot-y", `${targetY}px`);
+    return;
+  }
+
+  const peakY = Math.min(currentY, targetY) - 32;
+  const keyframes = [
+    { transform: `translate3d(${currentX}px, ${currentY}px, 0)` },
+    { transform: `translate3d(${(currentX + targetX) / 2}px, ${peakY}px, 0)` },
+    { transform: `translate3d(${targetX}px, ${targetY}px, 0)` },
+  ];
+
+  const anim = bot.animate(keyframes, {
+    duration: 520,
+    easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+    fill: "forwards",
+  });
+
+  anim.onfinish = () => {
+    bot.style.setProperty("--bot-x", `${targetX}px`);
+    bot.style.setProperty("--bot-y", `${targetY}px`);
+  };
+};
+
+// Make the AskMe bot jump to the quick action you click.
+document.addEventListener(
+  "click",
+  (e) => {
+    const btn = e.target?.closest?.(".quick-actions button");
+    if (!btn) return;
+    if (btn.classList.contains("quick-actions-clear")) return;
+    moveAskmeBotToButton(btn);
+  },
+  true
+);
+
 function clearChat() {
   const chat = document.querySelector(".chat-box");
   if (!chat) return;
@@ -329,14 +400,26 @@ if (form && formInputs.length > 0 && formBtn) {
 // certificate lightbox
 const certLightbox = document.querySelector("[data-cert-lightbox]");
 const certLightboxImg = document.querySelector("[data-cert-lightbox-img]");
+const certLightboxSource = document.querySelector("[data-cert-lightbox-source]");
 const certLightboxCloseEls = document.querySelectorAll("[data-cert-lightbox-close]");
 const certificateCards = document.querySelectorAll(".certificate-card");
 
-const openCertLightbox = (src, alt) => {
+const openCertLightbox = (src, alt, sourceUrl) => {
   if (!certLightbox || !certLightboxImg || !src) return;
 
   certLightboxImg.src = src;
   certLightboxImg.alt = alt || "Certificate";
+
+  if (certLightboxSource) {
+    if (sourceUrl) {
+      certLightboxSource.href = sourceUrl;
+      certLightboxSource.style.display = "inline-flex";
+    } else {
+      certLightboxSource.href = "";
+      certLightboxSource.style.display = "none";
+    }
+  }
+
   certLightbox.classList.add("active");
   document.body.style.overflow = "hidden";
 };
@@ -347,6 +430,12 @@ const closeCertLightbox = () => {
   certLightbox.classList.remove("active");
   certLightboxImg.src = "";
   certLightboxImg.alt = "";
+
+  if (certLightboxSource) {
+    certLightboxSource.href = "";
+    certLightboxSource.style.display = "none";
+  }
+
   document.body.style.overflow = "";
 };
 
@@ -358,9 +447,25 @@ if (certLightbox && certificateCards.length > 0) {
     const img = card.querySelector("img");
     if (!img) return;
 
-    const openFromImg = () => openCertLightbox(img.getAttribute("src"), img.getAttribute("alt"));
+    const getSourceUrl = () => {
+      const dataUrl = card.getAttribute("data-cert-url");
+      if (dataUrl) return dataUrl;
 
-    card.addEventListener("click", openFromImg);
+      if (card.tagName === "A") {
+        const href = card.getAttribute("href");
+        if (href && href !== "#") return href;
+      }
+
+      return "";
+    };
+
+    const openFromImg = () =>
+      openCertLightbox(img.getAttribute("src"), img.getAttribute("alt"), getSourceUrl());
+
+    card.addEventListener("click", (e) => {
+      if (card.tagName === "A") e.preventDefault();
+      openFromImg();
+    });
     card.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
@@ -484,7 +589,7 @@ if (skillsSection && "IntersectionObserver" in window) {
 
 navigationLinks.forEach((link) => {
   link.addEventListener("click", () => {
-    if (link.textContent && link.textContent.trim().toLowerCase() === "resume") {
+    if (link.textContent && link.textContent.trim().toLowerCase() === "skills") {
       setTimeout(animateSkillBars, 50);
     }
   });
