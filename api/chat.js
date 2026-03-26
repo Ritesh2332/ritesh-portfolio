@@ -29,9 +29,9 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: "Missing OPENROUTER_API_KEY" });
+    res.status(500).json({ error: "Missing GEMINI_API_KEY" });
     return;
   }
 
@@ -190,57 +190,42 @@ Always provide contact details when asked:
 
 You are not a generic chatbot — you represent a motivated and skilled student building a strong career in Data Science and AI.`;
 
-    let models = [
-      "meta-llama/llama-3-8b-instruct", // fast + stable
-      "mistralai/mistral-7b-instruct",
-    ];
+    const url =
+      "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" +
+      encodeURIComponent(apiKey);
 
-    let text = "";
+    const payload = {
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: systemPrompt + "\nUser question: " + userMessage }],
+        },
+      ],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 400,
+      },
+    };
 
-    for (let model of models) {
-      try {
-        console.log("Trying model:", model);
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-        const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://your-portfolio-url.vercel.app",
-            "X-Title": "Ritesh Portfolio Chatbot",
-          },
-          body: JSON.stringify({
-            model,
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userMessage },
-            ],
-            temperature: 0.3,
-            max_tokens: 400,
-          }),
-        });
-
-        const raw = await r.text();
-        console.log("RAW RESPONSE:", raw);
-
-        if (!r.ok) continue;
-
-        const data = JSON.parse(raw);
-
-        if (data?.choices?.length > 0) {
-          text = data.choices[0]?.message?.content || "";
-        }
-
-        if (text) break;
-      } catch (err) {
-        console.error("Model failed:", model, err);
-        continue;
-      }
+    if (!r.ok) {
+      const txt = await r.text();
+      console.error("Gemini request failed", txt);
+      res.status(500).json({ error: "Gemini request failed", details: txt });
+      return;
     }
 
-    res.status(200).json({
-      reply: text || "I'm here 👀 just hit me again!",
-    });
+    const data = await r.json();
+    const text =
+      data?.candidates?.[0]?.content?.parts?.map((p) => p.text).filter(Boolean).join("\n") ||
+      "";
+
+    res.status(200).json({ reply: text || "Sorry, I couldn't generate a response." });
   } catch (e) {
     console.error("/api/chat error", e);
     res.status(500).json({ error: "Server error" });
