@@ -73,9 +73,127 @@ const getAskmeBot = () => {
   return document.querySelector("[data-page=askme] .askme-bot");
 };
 
+const installAskmeBotAngryClick = () => {
+  const bot = getAskmeBot();
+  if (!bot) return;
+  if (bot.dataset.angryClickInstalled === "1") return;
+  bot.dataset.angryClickInstalled = "1";
+
+  bot.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    stopAskmeShowcase();
+
+    if (bot._exprTimer) {
+      clearTimeout(bot._exprTimer);
+      bot._exprTimer = null;
+    }
+
+    if (bot._jumpingTimer) {
+      clearTimeout(bot._jumpingTimer);
+      bot._jumpingTimer = null;
+    }
+
+    delete bot.dataset.jumping;
+    startAskmeAngryAvoid(4000);
+  });
+};
+
+const startAskmeAngryAvoid = (durationMs = 3500) => {
+  const bot = getAskmeBot();
+  if (!bot) return;
+  const card = bot.closest(".chatbot-card");
+  if (!card) return;
+
+  const prefersReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (bot._angryTimer) {
+    clearTimeout(bot._angryTimer);
+    bot._angryTimer = null;
+  }
+
+  bot.dataset.angry = "1";
+  bot.dataset.expression = "angry";
+
+  let last = null;
+  let raf = 0;
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(v, max));
+
+  const step = () => {
+    raf = 0;
+    if (!last) return;
+    if (!isAskMeActive()) return;
+
+    const cardRect = card.getBoundingClientRect();
+    const botRect = bot.getBoundingClientRect();
+
+    const botW = botRect.width || 86;
+    const botH = botRect.height || 86;
+
+    const botCx = (botRect.left - cardRect.left) + botW / 2;
+    const botCy = (botRect.top - cardRect.top) + botH / 2;
+    const mx = last.x - cardRect.left;
+    const my = last.y - cardRect.top;
+
+    const dx = botCx - mx;
+    const dy = botCy - my;
+    const dist = Math.max(1, Math.hypot(dx, dy));
+
+    // If cursor is close, move away more aggressively.
+    const danger = dist < 140 ? 1 : 0.35;
+    const baseStep = prefersReduce ? 10 : 18;
+    const stepPx = baseStep * danger;
+
+    const ux = dx / dist;
+    const uy = dy / dist;
+
+    let x = parseFloat(bot.dataset.x || 14);
+    let y = parseFloat(bot.dataset.y || 14);
+
+    x += ux * stepPx;
+    y += uy * stepPx;
+
+    const pad = 8;
+    x = clamp(x, pad, cardRect.width - botW - pad);
+    y = clamp(y, pad, cardRect.height - botH - pad);
+
+    bot.style.setProperty("--bot-x", `${Math.round(x)}px`);
+    bot.style.setProperty("--bot-y", `${Math.round(y)}px`);
+    bot.dataset.x = String(Math.round(x));
+    bot.dataset.y = String(Math.round(y));
+  };
+
+  const onMove = (e) => {
+    last = { x: e.clientX, y: e.clientY };
+    if (!raf) raf = window.requestAnimationFrame(step);
+  };
+
+  // Capture pointer movement over the whole card while angry.
+  card.addEventListener("mousemove", onMove);
+
+  bot._angryTimer = setTimeout(() => {
+    card.removeEventListener("mousemove", onMove);
+    if (raf) window.cancelAnimationFrame(raf);
+    raf = 0;
+    last = null;
+
+    delete bot.dataset.angry;
+    bot.dataset.expression = "idle";
+
+    // Return to default placement (right of title) after running away.
+    positionAskmeBotByTitle();
+    if (isAskMeActive()) startAskmeShowcase();
+    bot._angryTimer = null;
+  }, Math.max(800, durationMs));
+};
+
 const setAskmeBotExpression = (expr, opts = {}) => {
   const bot = getAskmeBot();
   if (!bot) return;
+
+  if (bot.dataset.angry === "1" && expr !== "angry") return;
 
   const prefersReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   bot.dataset.expression = String(expr || "idle");
@@ -161,6 +279,8 @@ const stopAskmeShowcase = () => {
 const startAskmeShowcase = () => {
   const bot = getAskmeBot();
   if (!bot) return;
+
+  if (bot.dataset.angry === "1") return;
 
   // Ensure the bot starts to the right of the AskMe title.
   positionAskmeBotByTitle();
@@ -277,6 +397,7 @@ const chatbotForm = document.querySelector("[data-chatbot-form]");
 const chatbotInput = document.querySelector("[data-chatbot-input]");
 
 installAskmeTypingInspect(chatbotInput);
+installAskmeBotAngryClick();
 
 const quickPrompts = {
   // Core Info
