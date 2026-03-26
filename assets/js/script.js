@@ -39,11 +39,244 @@ navigationLinks.forEach((link, index) => {
     link.classList.add("active");
 
     window.scrollTo(0, 0);
+
+    // Manage AskMe showcase based on active page.
+    const pageName = String(pages[index]?.dataset?.page || "").trim().toLowerCase();
+    if (pageName === "askme") {
+      startAskmeShowcase();
+    } else {
+      stopAskmeShowcase();
+      const bot = getAskmeBot();
+      if (bot) bot.dataset.expression = "idle";
+    }
   });
 });
 
+// If you hover any navbar link while AskMe is active (except AskMe itself), the bot gets sad/cry briefly.
+navigationLinks.forEach((link) => {
+  link.addEventListener("mouseenter", () => {
+    if (!isAskMeActive()) return;
+    const label = String(link.textContent || "").trim().toLowerCase();
+    if (label === "askme") return;
+
+    const bot = getAskmeBot();
+    if (!bot) return;
+    if (bot.dataset.expression === "thinking" || bot.dataset.expression === "inspect") return;
+    setAskmeBotExpression("cry", { ttlMs: 1200 });
+  });
+});
+
+const sidebar = document.querySelector("[data-sidebar]");
+const sidebarBtn = document.querySelector("[data-sidebar-btn]");
+
+const getAskmeBot = () => {
+  return document.querySelector("[data-page=askme] .askme-bot");
+};
+
+const setAskmeBotExpression = (expr, opts = {}) => {
+  const bot = getAskmeBot();
+  if (!bot) return;
+
+  const prefersReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  bot.dataset.expression = String(expr || "idle");
+
+  if (prefersReduce) return;
+
+  const ttl = Number.isFinite(opts.ttlMs) ? opts.ttlMs : 1200;
+  if (ttl > 0) {
+    if (bot._exprTimer) clearTimeout(bot._exprTimer);
+    bot._exprTimer = setTimeout(() => {
+      // Don't override thinking state
+      if (bot.dataset.expression !== "thinking") bot.dataset.expression = "idle";
+    }, ttl);
+  }
+};
+
+const triggerAskmeBotJumping = (durationMs = 2000) => {
+  const bot = getAskmeBot();
+  if (!bot) return;
+
+  if (bot._jumpingTimer) {
+    clearTimeout(bot._jumpingTimer);
+    bot._jumpingTimer = null;
+  }
+
+  bot.dataset.jumping = "1";
+  bot._jumpingTimer = setTimeout(() => {
+    // Only stop jumping if still on AskMe
+    const stillAskMe = isAskMeActive();
+    if (stillAskMe) delete bot.dataset.jumping;
+    bot._jumpingTimer = null;
+  }, Math.max(0, durationMs));
+};
+
+const isAskMeActive = () => {
+  const askme = document.querySelector('[data-page="askme"]');
+  return !!askme?.classList?.contains("active");
+};
+
+const positionAskmeBotByTitle = () => {
+  const bot = getAskmeBot();
+  if (!bot) return;
+
+  const article = bot.closest('[data-page="askme"]');
+  const card = bot.closest('.chatbot-card');
+  const title = article?.querySelector('header .article-title');
+  if (!article || !card || !title) return;
+
+  const cardRect = card.getBoundingClientRect();
+  const titleRect = title.getBoundingClientRect();
+  const botRect = bot.getBoundingClientRect();
+
+  const botW = botRect.width || 86;
+  const botH = botRect.height || 86;
+
+  // Desired position: to the right of the AskMe title, vertically centered with it.
+  const pad = 10;
+  let x = (titleRect.right - cardRect.left) + pad;
+  let y = (titleRect.top - cardRect.top) + (titleRect.height / 2) - (botH / 2);
+
+  // Clamp within the card width so it never overlaps outside.
+  x = Math.max(pad, Math.min(x, cardRect.width - botW - pad));
+
+  // Allow it to sit a bit above the card (negative y) but not too far.
+  const minY = -Math.round(botH * 0.9);
+  const maxY = Math.round(titleRect.bottom - cardRect.top);
+  y = Math.max(minY, Math.min(y, maxY));
+
+  bot.style.setProperty('--bot-x', `${Math.round(x)}px`);
+  bot.style.setProperty('--bot-y', `${Math.round(y)}px`);
+  bot.dataset.x = String(Math.round(x));
+  bot.dataset.y = String(Math.round(y));
+};
+
+const stopAskmeShowcase = () => {
+  const bot = getAskmeBot();
+  if (bot && bot._showcaseTimer) {
+    clearInterval(bot._showcaseTimer);
+    bot._showcaseTimer = null;
+  }
+};
+
+const startAskmeShowcase = () => {
+  const bot = getAskmeBot();
+  if (!bot) return;
+
+  // Ensure the bot starts to the right of the AskMe title.
+  positionAskmeBotByTitle();
+
+  stopAskmeShowcase();
+
+  const prefersReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReduce) {
+    setAskmeBotExpression("smile", { ttlMs: 0 });
+    return;
+  }
+
+  // Start with a warm smile, then laugh in a loop while AskMe is active.
+  const sequence = [
+    { expr: "smile", ms: 1400 },
+    { expr: "laugh", ms: 1600 },
+  ];
+  let i = 0;
+
+  const step = () => {
+    if (!isAskMeActive()) return;
+    const current = bot.dataset.expression;
+    if (current === "thinking" || current === "inspect") return;
+
+    const s = sequence[i % sequence.length];
+    bot.dataset.expression = s.expr;
+    i += 1;
+  };
+
+  step();
+  bot._showcaseTimer = setInterval(step, 1600);
+};
+
+// Keep the default bot placement responsive.
+let _askmeBotResizeTimer = null;
+window.addEventListener('resize', () => {
+  if (!isAskMeActive()) return;
+  if (_askmeBotResizeTimer) window.clearTimeout(_askmeBotResizeTimer);
+  _askmeBotResizeTimer = window.setTimeout(() => {
+    positionAskmeBotByTitle();
+  }, 120);
+});
+
+// Default expression
+setAskmeBotExpression("idle", { ttlMs: 0 });
+
+const installAskmeTypingInspect = (inputEl) => {
+  if (!inputEl) return;
+
+  let stopTimer = null;
+  const stopDelayMs = 900;
+
+  const scheduleStop = () => {
+    if (stopTimer) clearTimeout(stopTimer);
+    stopTimer = setTimeout(() => {
+      const bot = getAskmeBot();
+      if (!bot) return;
+      if (bot.dataset.expression === "thinking") return;
+      if (document.activeElement === inputEl && (inputEl.value || "").trim().length > 0) return;
+      setAskmeBotExpression("idle", { ttlMs: 0 });
+    }, stopDelayMs);
+  };
+
+  inputEl.addEventListener("focus", () => {
+    const bot = getAskmeBot();
+    if (bot && bot.dataset.expression !== "thinking") {
+      setAskmeBotExpression("inspect", { ttlMs: 0 });
+    }
+  });
+
+  inputEl.addEventListener("input", () => {
+    const bot = getAskmeBot();
+    if (!bot) return;
+    if (bot.dataset.expression !== "thinking") {
+      setAskmeBotExpression("inspect", { ttlMs: 0 });
+    }
+    scheduleStop();
+  });
+
+  inputEl.addEventListener("blur", () => {
+    scheduleStop();
+  });
+};
+
+const navigateToPage = (pageName) => {
+  const target = String(pageName || "").trim().toLowerCase();
+  if (!target) return;
+
+  pages.forEach((page) => {
+    page.classList.toggle("active", String(page.dataset.page || "").trim().toLowerCase() === target);
+  });
+
+  navigationLinks.forEach((nav) => {
+    nav.classList.toggle("active", String(nav.textContent || "").trim().toLowerCase() === target);
+  });
+
+  window.scrollTo(0, 0);
+};
+
+if (sidebarBtn && sidebar) {
+  sidebarBtn.addEventListener("click", () => {
+    const isMobile = window.matchMedia && window.matchMedia("(max-width: 460px)").matches;
+    if (isMobile) {
+      sidebar.classList.remove("active");
+      navigateToPage("contact");
+      return;
+    }
+
+    sidebar.classList.toggle("active");
+  });
+}
+
 const chatbotForm = document.querySelector("[data-chatbot-form]");
 const chatbotInput = document.querySelector("[data-chatbot-input]");
+
+installAskmeTypingInspect(chatbotInput);
 
 const quickPrompts = {
   // Core Info
@@ -184,6 +417,8 @@ function quickAsk(type) {
   const prompt = quickPrompts[type] || type;
   if (!prompt) return;
 
+  setAskmeBotExpression("excited", { ttlMs: 900 });
+  triggerAskmeBotJumping(2000);
   addMessage(prompt, "user");
   const placeholder = document.createElement("div");
   placeholder.className = "bot-msg";
@@ -196,6 +431,7 @@ function quickAsk(type) {
 
   (async () => {
     try {
+      setAskmeBotExpression("thinking", { ttlMs: 0 });
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -208,9 +444,11 @@ function quickAsk(type) {
       const reply = data?.reply || "Sorry, I couldn't generate a response.";
       if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
       addMessage(reply, "bot");
+      setAskmeBotExpression("happy", { ttlMs: 1400 });
     } catch {
       if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
       addMessage("Sorry, the chatbot is unavailable right now. Please try again in a moment.", "bot");
+      setAskmeBotExpression("surprised", { ttlMs: 1400 });
     }
   })();
 }
@@ -223,6 +461,44 @@ const moveAskmeBotToButton = (btn) => {
 
   const bot = card.querySelector(".askme-bot");
   if (!bot) return;
+
+  const getCurrentBotXY = () => {
+    // Prefer computed transform (handles mid-animation positions) and fall back to stored dataset.
+    const cs = window.getComputedStyle(bot);
+    const tf = cs.transform;
+    if (tf && tf !== "none") {
+      // matrix(a,b,c,d,tx,ty) or matrix3d(..., tx, ty, tz)
+      const m2 = tf.match(/^matrix\(([^)]+)\)$/);
+      if (m2) {
+        const parts = m2[1].split(",").map((v) => parseFloat(v.trim()));
+        if (parts.length === 6 && Number.isFinite(parts[4]) && Number.isFinite(parts[5])) {
+          return { x: parts[4], y: parts[5] };
+        }
+      }
+      const m3 = tf.match(/^matrix3d\(([^)]+)\)$/);
+      if (m3) {
+        const parts = m3[1].split(",").map((v) => parseFloat(v.trim()));
+        // matrix3d indices: tx=12, ty=13
+        if (parts.length === 16 && Number.isFinite(parts[12]) && Number.isFinite(parts[13])) {
+          return { x: parts[12], y: parts[13] };
+        }
+      }
+    }
+
+    const x = parseFloat(bot.dataset.x || 14);
+    const y = parseFloat(bot.dataset.y || 14);
+    return { x, y };
+  };
+
+  // Cancel any in-flight jump animation so the bot never gets stuck mid-way.
+  if (bot._askmeJumpAnim) {
+    try {
+      bot._askmeJumpAnim.cancel();
+    } catch {
+      // ignore
+    }
+    bot._askmeJumpAnim = null;
+  }
 
   const prefersReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -245,11 +521,16 @@ const moveAskmeBotToButton = (btn) => {
   const minY = -Math.round(botH * 0.55);
   targetY = Math.max(minY, Math.min(targetY, cardRect.height - botH - pad));
 
-  const currentX = parseFloat(bot.dataset.x || 14);
-  const currentY = parseFloat(bot.dataset.y || 14);
+  const current = getCurrentBotXY();
+  const currentX = current.x;
+  const currentY = current.y;
 
   bot.dataset.x = String(targetX);
   bot.dataset.y = String(targetY);
+
+  // Freeze starting position into CSS vars so the jump always starts from the real current spot.
+  bot.style.setProperty("--bot-x", `${currentX}px`);
+  bot.style.setProperty("--bot-y", `${currentY}px`);
 
   if (prefersReduce) {
     bot.style.setProperty("--bot-x", `${targetX}px`);
@@ -270,10 +551,21 @@ const moveAskmeBotToButton = (btn) => {
     fill: "forwards",
   });
 
-  anim.onfinish = () => {
+  bot._askmeJumpAnim = anim;
+
+  const commit = () => {
     bot.style.setProperty("--bot-x", `${targetX}px`);
     bot.style.setProperty("--bot-y", `${targetY}px`);
+    bot._askmeJumpAnim = null;
   };
+
+  anim.onfinish = commit;
+  anim.oncancel = commit;
+
+  // Safety: some browsers may skip finish events in edge cases (e.g., rapid clicks/background tabs).
+  setTimeout(() => {
+    if (bot._askmeJumpAnim === anim) commit();
+  }, 650);
 };
 
 // Make the AskMe bot jump to the quick action you click.
@@ -304,6 +596,8 @@ if (chatbotForm && chatbotInput) {
     e.preventDefault();
     const input = chatbotInput.value.trim();
     if (!input) return;
+    setAskmeBotExpression("excited", { ttlMs: 900 });
+    triggerAskmeBotJumping(2000);
     addMessage(input, "user");
     chatbotInput.value = "";
 
@@ -317,6 +611,7 @@ if (chatbotForm && chatbotInput) {
     }
 
     try {
+      setAskmeBotExpression("thinking", { ttlMs: 0 });
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -329,9 +624,11 @@ if (chatbotForm && chatbotInput) {
       const reply = data?.reply || "Sorry, I couldn't generate a response.";
       if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
       addMessage(reply, "bot");
+      setAskmeBotExpression("happy", { ttlMs: 1400 });
     } catch {
       if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
       addMessage("Sorry, the chatbot is unavailable right now. Please try again in a moment.", "bot");
+      setAskmeBotExpression("surprised", { ttlMs: 1400 });
     }
   });
 }
