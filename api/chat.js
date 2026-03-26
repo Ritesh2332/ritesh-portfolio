@@ -190,12 +190,17 @@ Always provide contact details when asked:
 
 You are not a generic chatbot — you represent a motivated and skilled student building a strong career in Data Science and AI.`;
 
-    let models = ["meta-llama/llama-3-70b-instruct", "mistralai/mistral-7b-instruct"];
+    let models = [
+      "meta-llama/llama-3-8b-instruct", // fast + stable
+      "mistralai/mistral-7b-instruct",
+    ];
 
     let text = "";
 
     for (let model of models) {
       try {
+        console.log("Trying model:", model);
+
         const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -215,19 +220,26 @@ You are not a generic chatbot — you represent a motivated and skilled student 
           }),
         });
 
+        const raw = await r.text();
+        console.log("RAW RESPONSE:", raw);
+
         if (!r.ok) continue;
 
-        const data = await r.json();
-        text = data?.choices?.[0]?.message?.content || "";
+        const data = JSON.parse(raw);
+
+        if (data?.choices?.length > 0) {
+          text = data.choices[0]?.message?.content || "";
+        }
 
         if (text) break;
       } catch (err) {
+        console.error("Model failed:", model, err);
         continue;
       }
     }
 
     res.status(200).json({
-      reply: text || "⚠️ Temporary issue. Please try again.",
+      reply: text || "I'm here 👀 just hit me again!",
     });
   } catch (e) {
     console.error("/api/chat error", e);
