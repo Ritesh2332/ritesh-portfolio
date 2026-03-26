@@ -981,7 +981,7 @@ html[data-theme="light"] a[href*="github.com"] .brand-icon svg path {
 @media (max-width: 460px) {
   .navbar-list {
     flex-wrap: nowrap;
-    justify-content: flex-start;
+    justify-content: center;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -1007,18 +1007,20 @@ html[data-theme="light"] a[href*="github.com"] .brand-icon svg path {
 
 @media (min-width: 461px) and (max-width: 1023px) {
   .navbar {
-    position: absolute;
+    position: fixed;
     bottom: auto;
     top: 0;
-    left: auto;
-    right: 0;
-    width: max-content;
-    border-radius: 0 20px;
-    padding: 0 44px 0 10px;
-    box-shadow: none;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 100%;
+    border-radius: 0 0 12px 12px;
+    padding-inline: 8px;
+    box-shadow: var(--shadow-2);
   }
 
   .navbar-list {
+    justify-content: center;
     padding: 0;
   }
 
@@ -1869,6 +1871,19 @@ html[data-theme="light"] a[href*="github.com"] .brand-icon svg path {
   .project-link {
     grid-template-columns: 1fr !important;
     align-items: start;
+  }
+
+  .project-content {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .project-link {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    grid-template-columns: 1fr !important;
   }
 
   .project-content {

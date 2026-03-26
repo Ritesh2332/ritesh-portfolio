@@ -62,7 +62,7 @@ navigationLinks.forEach((link) => {
     const bot = getAskmeBot();
     if (!bot) return;
     if (bot.dataset.expression === "thinking" || bot.dataset.expression === "inspect") return;
-    setAskmeBotExpression("cry", { ttlMs: 1200 });
+    setAskmeBotExpression("cry", { ttlMs: 5000 });
   });
 });
 
