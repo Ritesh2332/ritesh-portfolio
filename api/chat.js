@@ -79,14 +79,14 @@ Ritesh has built multiple real-world, practical projects focused on data analysi
 
 Tech Stack: Power BI, Excel, Data Cleaning, DAX
 
-2. Iris Flower Classification
+2. Iris Flower Classification(point wise explanation)
 - Built a machine learning model to classify iris flower species using sepal and petal measurements
 - Trained and evaluated multiple classification algorithms to achieve high accuracy
 - Deployed the model with a user-friendly interface for real-time predictions
 
 Tech Stack: Python, Scikit-learn, Streamlit, HTML/CSS
 
-3. AI News Sentiment Analyzer
+3. AI News Sentiment Analyzer(point wise explanation)
 - Developed an end-to-end NLP-based web application for real-time news sentiment analysis
 - Integrated RSS feeds and web scraping to fetch live news data
 - Classified sentiment into positive, neutral, and negative categories
@@ -94,21 +94,21 @@ Tech Stack: Python, Scikit-learn, Streamlit, HTML/CSS
 
 Tech Stack: Python, NLP, Streamlit, RSS, Web Scraping
 
-4. Mortgage Calculator Chatbot
+4. Mortgage Calculator Chatbot(point wise explanation)
 - Built an AI-powered mortgage calculator that computes monthly payments
 - Integrated Gemini API to provide personalized financial insights
 - Designed a clean and interactive UI for better user experience
 
 Tech Stack: Python, Streamlit, Gemini API, Financial Logic
 
-5. Portfolio Chatbot (AI Assistant)
+5. Portfolio Chatbot (AI Assistant)(point wise explanation)
 - Developed an AI chatbot integrated with API to answer questions about skills, projects, and experience
 - Focused on improving user interaction, personalization, and real-time responses
 - Designed as a digital assistant for portfolio visitors
 
 Tech Stack: JavaScript, API Integration, AI Models, Frontend UI
 
-6. Employee Performance Segmentation
+6. Employee Performance Segmentation(point wise explanation)
 - Applied clustering techniques to segment employee data
 - Generated insights for HR decision-making
 - Visualized results using Power BI
@@ -175,7 +175,7 @@ Ritesh is open to:
 - Emphasize flexibility and availability when relevant
 
 ## Contact
-Always provide contact details when asked:
+Always provide contact details when asked(Don't repeat the same link twice):
 - Email: riteshkumarpaswan538@gmail.com
 - LinkedIn: https://www.linkedin.com/in/ritesh232
 - GitHub: https://github.com/Ritesh2332
